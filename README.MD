@@ -1,5 +1,9 @@
 
 # Reverse SSH Tunnel with Golang for Local API Forwarding
+<div align="center">
+    <img src="demo.png" alt="My Image" width="400">
+</div>
+
 
 This project demonstrates how to use **Go** to create an **SSH reverse tunnel** to forward traffic from a remote server (e.g., an AWS EC2 instance) to a local server running on your machine. This is particularly useful for exposing local REST APIs to external clients securely.
 
@@ -78,14 +82,6 @@ For example:
 
 ## Usage
 
-### Update the Go Program
-
-Modify the `main.go` file with your configuration:
-
-- Replace `aws-server-address` with the address of your remote server.
-- Update the SSH username (`sshUser`) and password (`sshPassword`).
-- Set the local server (`localhost:3000`) and remote port (`8080`).
-
 
 ### Run the Reverse SSH Tunnel
 
@@ -95,11 +91,18 @@ Start the Go program:
 go run main.go
 ```
 
+Modify the configuration
+
+- Replace `Remote Server Address` with the address of your remote server.
+- Update the SSH username and password
+- Set the local server example (`localhost:8080`) and remote port (`3000`).
+
+
 The program will:
 
 1. Connect to your remote SSH server.
-2. Listen for incoming traffic on `0.0.0.0:8080` (AWS server).
-3. Forward requests to `localhost:3000`.
+2. Listen for incoming traffic on `0.0.0.0:3000` (AWS server).
+3. Forward requests to `localhost:8080`.
 
 
 ### Test the Forwarding
@@ -107,7 +110,7 @@ The program will:
 Send a request to the remote server:
 
 ```bash
-curl http://aws-server-address:8080/callback
+curl http://remote-server-address:8080/callback
 ```
 
 The local server will handle the request and respond:
@@ -129,7 +132,6 @@ Received callback request
 reverse-ssh-tunnel/
 │
 ├── main.go             # Reverse SSH tunnel code
-├── local_server.go     # Example local server handling "/callback"
 └── README.md           # Project documentation
 ```
 
@@ -138,12 +140,13 @@ reverse-ssh-tunnel/
 ## Security Notes
 
 - Replace password-based authentication with **SSH private key authentication** for production environments.
-- Make sure the remote server's firewall/security group allows inbound traffic on the forwarded port (e.g., `8080`).
+- Make sure the remote server's firewall/security group allows inbound traffic on the forwarded port (e.g., `3000`).
 
 
 
 ## Dependencies
 
+- [fyne.io/fyne/v2](https://github.com/fyne-io/fyne)
 - [golang.org/x/crypto/ssh](https://pkg.go.dev/golang.org/x/crypto/ssh)
 
 
