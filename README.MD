@@ -39,16 +39,16 @@ For example:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/yourusername/reverse-ssh-tunnel.git
-   cd reverse-ssh-tunnel
+   git clone https://github.com/gerins/go-reverse-tunnel
+   cd go-reverse-tunnel
    ```
 
 2. **Install dependencies**:
 
-   The project uses the `golang.org/x/crypto/ssh` package.
+   The project uses the `golang.org/x/crypto/ssh` and `fyne.io/fyne/v2` package.
 
    ```bash
-   go get golang.org/x/crypto/ssh
+     go mod tidy
    ```
 
 3. **Run your local server** (example for Go):
