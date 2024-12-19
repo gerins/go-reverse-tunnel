@@ -39,7 +39,7 @@ For example:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/gerins/go-reverse-tunnel
+   git clone https://github.com/gerins/go-reverse-tunnel.git
    cd go-reverse-tunnel
    ```
 
@@ -48,7 +48,7 @@ For example:
    The project uses the `golang.org/x/crypto/ssh` and `fyne.io/fyne/v2` package.
 
    ```bash
-     go mod tidy
+    go mod tidy
    ```
 
 3. **Run your local server** (example for Go):
