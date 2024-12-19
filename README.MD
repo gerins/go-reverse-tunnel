@@ -18,12 +18,12 @@ This project demonstrates how to use **Go** to create an **SSH reverse tunnel** 
 
 ## Use Case
 
-You can expose your local development server (e.g., `localhost:3000`) to the internet by forwarding traffic from an AWS server.
+You can expose your local development server (e.g., `localhost:8080`) to the internet by forwarding traffic from an development server like AWS EC2 instance.
 
 For example:
 
-1. A client sends a request to `http://aws-server-address:8080/callback`.
-2. The Go program forwards the request to your local server at `http://localhost:3000/callback`.
+1. A client sends a request to `http://remote-server-address:3000/callback`.
+2. The Go program forwards the request to your local server at `http://localhost:8080/callback`.
 3. Your local server processes the request and sends the response back to the client.
 
 
@@ -31,7 +31,7 @@ For example:
 
 - Go 1.18+ installed on your machine.
 - An SSH-accessible remote server (e.g., AWS EC2).
-- Local server running on your machine (e.g., `localhost:3000`).
+- Local server running on your machine (e.g., `localhost:8080`).
 
 
 ## Installation
@@ -51,7 +51,7 @@ For example:
     go mod tidy
    ```
 
-3. **Run your local server** (example for Go):
+3. **Run your local server** (example for Go save as local_server.go):
 
    ```go
    package main
@@ -68,11 +68,11 @@ For example:
 
    func main() {
        http.HandleFunc("/callback", callbackHandler)
-       fmt.Println("Local server running on http://localhost:3000")
-       http.ListenAndServe(":3000", nil)
+       fmt.Println("Local server running on http://localhost:8080")
+       http.ListenAndServe(":8080", nil)
    }
    ```
-
+    
    Start the local server:
 
    ```bash
@@ -101,7 +101,7 @@ Modify the configuration
 The program will:
 
 1. Connect to your remote SSH server.
-2. Listen for incoming traffic on `0.0.0.0:3000` (AWS server).
+2. Listen for incoming traffic on `0.0.0.0:3000` Remote server.
 3. Forward requests to `localhost:8080`.
 
 
@@ -110,7 +110,7 @@ The program will:
 Send a request to the remote server:
 
 ```bash
-curl http://remote-server-address:8080/callback
+curl http://remote-server-address:3000/callback
 ```
 
 The local server will handle the request and respond:
@@ -163,4 +163,4 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 ## Author
 
 **Your Name**  
-[GitHub](https://github.com/gerins) | [LinkedIn](#)
+[GitHub](https://github.com/gerins) | [LinkedIn](https://www.linkedin.com/in/garin-prakoso-60244b1a2/)
