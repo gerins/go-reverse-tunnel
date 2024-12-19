@@ -129,7 +129,7 @@ Received callback request
 ## File Structure
 
 ```
-reverse-ssh-tunnel/
+go-reverse-tunnel/
 │
 ├── main.go             # Reverse SSH tunnel code
 └── README.md           # Project documentation
@@ -152,7 +152,7 @@ reverse-ssh-tunnel/
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the Apache License.
 
 
 ## Contributing
