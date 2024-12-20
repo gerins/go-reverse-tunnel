@@ -150,17 +150,24 @@ go-reverse-tunnel/
 - [golang.org/x/crypto/ssh](https://pkg.go.dev/golang.org/x/crypto/ssh)
 
 
-## License
+## 📘 Documentation
 
-This project is licensed under the Apache License.
+`WIP`
 
 
-## Contributing
+## 🙌 Contributing
 
 Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
 
 
-## Author
+## 🔒 License
 
-**Your Name**  
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the `LICENSE` file for details.
+
+
+## ✍️ Author
+
+**Garin Prakoso** 
 [GitHub](https://github.com/gerins) | [LinkedIn](https://www.linkedin.com/in/garin-prakoso-60244b1a2/)
+Feel free to contact me if you need help or have any feedback.
+
