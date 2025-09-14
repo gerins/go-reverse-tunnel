@@ -9,7 +9,7 @@ This project demonstrates how to use **Go** to create an **SSH reverse tunnel** 
 ```mermaid
 flowchart LR
     Client[(Remote Client)]
-    RemotePort["Remote Port (0.0.0.0:3000)"]
+    RemotePort["Remote Server (0.0.0.0:3000)"]
     SSH["SSH Tunnel"]
     LocalPort["Local Server (localhost:8080)"]
 
@@ -17,9 +17,9 @@ flowchart LR
     RemotePort -->|TCP Request| SSH
     SSH -->|TCP Request| LocalPort
 
-    LocalPort -->|HTTP Response| SSH
+    LocalPort -->|TCP Response| SSH
     SSH -->|TCP Response| RemotePort
-    RemotePort -->|TCP Response| Client
+    RemotePort -->|HTTP Response| Client
 ```
 
 ---
