@@ -1,5 +1,5 @@
 
-# Reverse SSH Tunnel with Golang for Local API Forwarding (CLI Version)
+# Reverse SSH Tunnel with Golang for Local API Forwarding
 
 
 This project demonstrates how to use **Go** to create an **SSH reverse tunnel** to forward traffic from a remote server (e.g., an AWS EC2 instance) to a local server running on your machine. This is particularly useful for exposing local REST APIs to external clients securely
