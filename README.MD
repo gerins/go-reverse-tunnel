@@ -1,173 +1,184 @@
 
-# Reverse SSH Tunnel with Golang for Local API Forwarding
-<div align="center">
-    <img src="demo.png" alt="My Image" width="400">
-</div>
+# Reverse SSH Tunnel with Golang for Local API Forwarding (CLI Version)
 
 
-This project demonstrates how to use **Go** to create an **SSH reverse tunnel** to forward traffic from a remote server (e.g., an AWS EC2 instance) to a local server running on your machine. This is particularly useful for exposing local REST APIs to external clients securely.
+This project demonstrates how to use **Go** to create an **SSH reverse tunnel** to forward traffic from a remote server (e.g., an AWS EC2 instance) to a local server running on your machine. This is particularly useful for exposing local REST APIs to external clients securely
 
+---
 
 ## Features
 
-- Establishes an SSH connection to a remote server.
-- Forwards traffic received on a remote port to your local server.
-- Supports **HTTP REST APIs** or any TCP-based protocols.
-- Seamlessly handles requests and responses over the tunnel.
+- SSH reverse tunnel to expose your local server through a remote server.
+- Works for any TCP-based protocol (e.g., HTTP REST APIs).
+- CLI-based (no GUI dependencies).
+- Supports **password** and **SSH key-based** authentication.
+- Forward remote requests (e.g. `3000`) to your local port (e.g. `8080`).
 
+---
 
 ## Use Case
 
-You can expose your local development server (e.g., `localhost:8080`) to the internet by forwarding traffic from an development server like AWS EC2 instance.
+Expose your local development server (e.g., `localhost:8080`) to the internet via an SSH-accessible server:
 
-For example:
+1. Client sends a request to `http://remote-server:3000/callback`
+2. It is forwarded to your local server `http://localhost:8080/callback`
+3. Your server processes and returns a response
 
-1. A client sends a request to `http://remote-server-address:3000/callback`.
-2. The Go program forwards the request to your local server at `http://localhost:8080/callback`.
-3. Your local server processes the request and sends the response back to the client.
-
+---
 
 ## Prerequisites
 
-- Go 1.18+ installed on your machine.
-- An SSH-accessible remote server (e.g., AWS EC2).
-- Local server running on your machine (e.g., `localhost:8080`).
+- Go 1.18+
+- An SSH-accessible remote server (e.g., AWS EC2)
+- A running local server (e.g., on `localhost:8080`)
+- Proper firewall/security group rules allowing the remote port
 
+---
 
 ## Installation
 
-1. **Clone the repository**:
+```bash
+git clone https://github.com/gerins/go-reverse-tunnel.git
+cd go-reverse-tunnel
+go mod tidy
+````
 
-   ```bash
-   git clone https://github.com/gerins/go-reverse-tunnel.git
-   cd go-reverse-tunnel
-   ```
+---
 
-2. **Install dependencies**:
+## Example: Local Test Server
 
-   The project uses the `golang.org/x/crypto/ssh` and `fyne.io/fyne/v2` package.
+Create a file `local_server.go`:
 
-   ```bash
-    go mod tidy
-   ```
+```go
+package main
 
-3. **Run your local server** (example for Go save as local_server.go):
+import (
+    "fmt"
+    "net/http"
+)
 
-   ```go
-   package main
+func callbackHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Received callback request")
+    fmt.Fprintln(w, "Callback received successfully!")
+}
 
-   import (
-       "fmt"
-       "net/http"
-   )
+func main() {
+    http.HandleFunc("/callback", callbackHandler)
+    fmt.Println("Local server running on http://localhost:8080")
+    http.ListenAndServe(":8080", nil)
+}
+```
 
-   func callbackHandler(w http.ResponseWriter, r *http.Request) {
-       fmt.Println("Received callback request")
-       fmt.Fprintf(w, "Callback received successfully!")
-   }
+Run it:
 
-   func main() {
-       http.HandleFunc("/callback", callbackHandler)
-       fmt.Println("Local server running on http://localhost:8080")
-       http.ListenAndServe(":8080", nil)
-   }
-   ```
-    
-   Start the local server:
+```bash
+go run local_server.go
+```
 
-   ```bash
-   go run local_server.go
-   ```
-
+---
 
 ## Usage
 
-
-### Run the Reverse SSH Tunnel
-
-Start the Go program:
+### 🔧 CLI Arguments
 
 ```bash
-go run main.go
+go run main.go \
+  -remote=your-server.com:22 \
+  -user=ubuntu \
+  -pass=yourpassword \
+  -rport=3000 \
+  -laddr=localhost:8080
 ```
 
-Modify the configuration
-
-- Replace `Remote Server Address` with the address of your remote server.
-- Update the SSH username and password
-- Set the local server example (`localhost:8080`) and remote port (`3000`).
-
-
-The program will:
-
-1. Connect to your remote SSH server.
-2. Listen for incoming traffic on `0.0.0.0:3000` Remote server.
-3. Forward requests to `localhost:8080`.
-
-
-### Test the Forwarding
-
-Send a request to the remote server:
+Or use SSH private key authentication:
 
 ```bash
-curl http://remote-server-address:3000/callback
+go run main.go \
+  -remote=your-server.com:22 \
+  -user=ubuntu \
+  -key=~/.ssh/id_rsa \
+  -rport=3000 \
+  -laddr=localhost:8080
 ```
 
-The local server will handle the request and respond:
+### Required Flags
+
+| Flag      | Description                                         |
+|-----------|-----------------------------------------------------|
+| `-remote` | Remote SSH server (e.g. `host:22`)                  |
+| `-user`   | SSH username                                        |
+| `-pass`   | SSH password (optional if using `-key`)             |
+| `-key`    | SSH private key path (optional)                     |
+| `-rport`  | Remote port to bind (e.g., `3000`)                  |
+| `-laddr`  | Local server to forward to (e.g., `localhost:8080`) |
+
+> 🔐 You **must** provide either `-pass` or `-key`.
+
+---
+
+## Example Test
+
+```bash
+curl http://your-server.com:3000/callback
+```
+
+Expected Output:
 
 ```
 Callback received successfully!
 ```
 
-You will also see the output on your local server console:
+Local server console will log:
 
 ```
 Received callback request
 ```
 
+---
 
 ## File Structure
 
 ```
 go-reverse-tunnel/
-│
-├── main.go             # Reverse SSH tunnel code
-└── README.md           # Project documentation
+├── main.go         # Reverse SSH tunnel CLI
+├── local_server.go # Example local server
+└── README.md       # Project documentation
 ```
 
-
+---
 
 ## Security Notes
 
-- Replace password-based authentication with **SSH private key authentication** for production environments.
-- Make sure the remote server's firewall/security group allows inbound traffic on the forwarded port (e.g., `3000`).
+* Prefer **SSH key authentication** over passwords for production.
+* Ensure your remote server’s firewall allows inbound traffic on the forwarded port (e.g., `3000`).
 
-
+---
 
 ## Dependencies
 
-- [fyne.io/fyne/v2](https://github.com/fyne-io/fyne)
-- [golang.org/x/crypto/ssh](https://pkg.go.dev/golang.org/x/crypto/ssh)
+* [golang.org/x/crypto/ssh](https://pkg.go.dev/golang.org/x/crypto/ssh)
 
+---
 
 ## 📘 Documentation
 
 `WIP`
 
+---
 
 ## 🙌 Contributing
 
-Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
+Pull requests are welcome! Please open an issue first to discuss major changes.
 
+---
 
 ## 🔒 License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the `LICENSE` file for details.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). See `LICENSE` for details.
 
+---
 
 ## ✍️ Author
 
-**Garin Prakoso** 
+**Garin Prakoso**
 [GitHub](https://github.com/gerins) | [LinkedIn](https://www.linkedin.com/in/garin-prakoso-60244b1a2/)
-Feel free to contact me if you need help or have any feedback.
-
