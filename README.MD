@@ -6,6 +6,24 @@ This project demonstrates how to use **Go** to create an **SSH reverse tunnel** 
 
 ---
 
+```mermaid
+flowchart LR
+    Client[(Remote Client)]
+    RemotePort["Remote Port (0.0.0.0:3000)"]
+    SSH["SSH Tunnel"]
+    LocalPort["Local Server (localhost:8080)"]
+
+    Client -->|HTTP Request| RemotePort
+    RemotePort -->|TCP Request| SSH
+    SSH -->|TCP Request| LocalPort
+
+    LocalPort -->|HTTP Response| SSH
+    SSH -->|TCP Response| RemotePort
+    RemotePort -->|TCP Response| Client
+```
+
+---
+
 ## Features
 
 - SSH reverse tunnel to expose your local server through a remote server.
